@@ -1,1 +1,1 @@
-web: gunicorn bookmanager.wsgi
+web: python manage.py collectstatic --noinput && gunicorn bookmanager.wsgi
