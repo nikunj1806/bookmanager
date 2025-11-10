@@ -25,7 +25,12 @@ SECRET_KEY = 'django-insecure-$q6-5#jl&n=@9600@mc+)nwd_-w=0fjk7lq9wf@3^ng*_1p$64
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']  # (or ['your-app-name.onrender.com'])
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 
 
 # Application definition
@@ -147,6 +152,3 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'users.User'
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
