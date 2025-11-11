@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'drf_yasg',
 
     # Local app
+    'home',
     'users',
     'books',
     'loans',
