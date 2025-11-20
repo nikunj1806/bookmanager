@@ -16,6 +16,20 @@ class Loan(models.Model):
 
     member = models.ForeignKey(User, on_delete=models.CASCADE, related_name='loans')
     book = models.ForeignKey(Book, on_delete=models.PROTECT, related_name='loans')
+    store = models.ForeignKey(
+        "stores.Store",
+        on_delete=models.PROTECT,
+        related_name="loans",
+        null=True,
+        blank=True,
+    )
+    store_inventory = models.ForeignKey(
+        "stores.StoreInventory",
+        on_delete=models.PROTECT,
+        related_name="loans",
+        null=True,
+        blank=True,
+    )
     loan_date = models.DateField(default=timezone.now)
     due_date = models.DateField()
     return_date = models.DateField(null=True, blank=True)

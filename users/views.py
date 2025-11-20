@@ -1,14 +1,36 @@
-from rest_framework import generics
+from rest_framework import generics, permissions
+
 from .models import User
-from .serializers import UserSerializer
+from .permissions import IsMemberUser
+from .serializers import (
+    MemberProfileUpdateSerializer,
+    MemberRegistrationSerializer,
+    UserSerializer,
+)
 
-# ✅ List all users OR create new user
-class UserListView(generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-# ✅ Retrieve, update or delete a specific user
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class CurrentUserView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+
+class MemberRegistrationView(generics.CreateAPIView):
+    serializer_class = MemberRegistrationSerializer
+    permission_classes = [permissions.AllowAny]
+
+
+class MemberProfileUpdateView(generics.UpdateAPIView):
+    serializer_class = MemberProfileUpdateSerializer
+    permission_classes = [permissions.IsAuthenticated, IsMemberUser]
+
+    def get_object(self):
+        return self.request.user
+
+

@@ -1,6 +1,9 @@
 from django.urls import path
-from .views import LoanListView
+
+from .views import MemberBorrowBookView, MemberLoanListView, MemberReturnLoanView
 
 urlpatterns = [
-    path('', LoanListView.as_view(), name='loan-list'),
+    path('create/', MemberBorrowBookView.as_view(), name='member-borrow-book'),
+    path('list/', MemberLoanListView.as_view(), name='member-borrow-list'),
+    path('return/<int:loan_id>/', MemberReturnLoanView.as_view(), name='member-borrow-return'),
 ]

@@ -21,8 +21,6 @@ class Book(models.Model):
     authors = models.ManyToManyField(Author, related_name='books')
     isbn = models.CharField(max_length=13, unique=True)
     genres = models.ManyToManyField(Genre, related_name='books', blank=True)
-    total_copies = models.PositiveIntegerField(default=100)
-    available_copies = models.PositiveIntegerField(default=100)
     cover_image = models.ImageField(upload_to='book_covers/', null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 

@@ -15,3 +15,16 @@ class IsOwnerOrLibrarianOrReadOnly(permissions.BasePermission):
             return True
         # members can act on their own records (e.g., their loans)
         return getattr(obj, 'member', None) == request.user
+
+
+class IsMemberUser(permissions.BasePermission):
+    """
+    Allows access only to authenticated users with the member role.
+    """
+
+    def has_permission(self, request, view):
+        return bool(
+            request.user
+            and request.user.is_authenticated
+            and request.user.role == request.user.ROLE_MEMBER
+        )

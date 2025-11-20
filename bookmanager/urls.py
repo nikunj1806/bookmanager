@@ -1,27 +1,13 @@
-"""
-URL configuration for bookmanager project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from django.http import HttpResponse
 from django.urls import path, include, re_path
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenBlacklistView
+
+from users.views import CurrentUserView, MemberRegistrationView, MemberProfileUpdateView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -39,11 +25,20 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("home.urls")),
-    # Include app APIs
-    path("api/users/", include("users.urls")),
+
+    # JWT auth endpoints
+    path('api/auth/token/', TokenObtainPairView.as_view(), name='auth_token_obtain_pair'),
+    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='auth_token_refresh'),
+    path('api/auth/token/logout/', TokenBlacklistView.as_view(), name='auth_token_logout'),
+    path('api/auth/me/', CurrentUserView.as_view(), name='auth_me'),
+    path('api/auth/register/', MemberRegistrationView.as_view(), name='auth_register'),
+    path('api/profile/update/', MemberProfileUpdateView.as_view(), name='member-profile-update'),
+    # Member-facing API surface
+    
     path("api/books/", include("books.urls")),
-    path("api/loans/", include("loans.urls")),
+    path("api/borrow/", include("loans.urls")),
     path("api/payments/", include("payments.urls")),
+    # path("api/", include("stores.urls")),
 
     # Swagger / ReDoc
     re_path(r"^swagger(?P<format>\.json|\.yaml)$", schema_view.without_ui(cache_timeout=0), name="schema-json"),
