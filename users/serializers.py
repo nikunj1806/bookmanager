@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 
 from .models import User
@@ -81,3 +82,35 @@ class MemberRegistrationSerializer(serializers.ModelSerializer):
             role=User.ROLE_MEMBER,
         )
         return user
+
+
+class CurrentUserSerializer(serializers.ModelSerializer):
+    current_membership = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "contact_number",
+            "role",
+            "is_active",
+            "date_joined",
+            "current_membership",
+        ]
+
+    def get_current_membership(self, obj):
+        from payments.models import UserMembership
+        from payments.serializers import UserMembershipSerializer
+
+        active_membership = obj.memberships.filter(
+            status=UserMembership.STATUS_ACTIVE,
+            end_date__gt=timezone.now()
+        ).first()
+
+        if active_membership:
+            return UserMembershipSerializer(active_membership).data
+        return None

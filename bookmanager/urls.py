@@ -33,11 +33,12 @@ urlpatterns = [
     path('api/auth/me/', CurrentUserView.as_view(), name='auth_me'),
     path('api/auth/register/', MemberRegistrationView.as_view(), name='auth_register'),
     path('api/profile/update/', MemberProfileUpdateView.as_view(), name='member-profile-update'),
-    # Member-facing API surface
     
     path("api/books/", include("books.urls")),
     path("api/borrow/", include("loans.urls")),
-    path("api/payments/", include("payments.urls")),
+    path("api/payment/", include("payments.urls")),
+    path("api/membership/", include("payments.membership_urls")),
+    path("api/purchase/", include("payments.purchase_urls")),
     # path("api/", include("stores.urls")),
 
     # Swagger / ReDoc

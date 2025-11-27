@@ -3,6 +3,7 @@ from rest_framework import generics, permissions
 from .models import User
 from .permissions import IsMemberUser
 from .serializers import (
+    CurrentUserSerializer,
     MemberProfileUpdateSerializer,
     MemberRegistrationSerializer,
     UserSerializer,
@@ -14,7 +15,7 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CurrentUserView(generics.RetrieveAPIView):
-    serializer_class = UserSerializer
+    serializer_class = CurrentUserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):

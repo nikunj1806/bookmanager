@@ -3,7 +3,45 @@ from rest_framework import serializers
 from books.models import Book
 from books.serializers import BookSerializer
 
-from .models import Payment
+from .models import Payment, MembershipPlan, UserMembership
+
+
+class MembershipPlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MembershipPlan
+        fields = [
+            "id",
+            "name",
+            "description",
+            "price",
+            "duration_days",
+            "max_books_allowed",
+        ]
+
+
+class UserMembershipSerializer(serializers.ModelSerializer):
+    plan = MembershipPlanSerializer(read_only=True)
+    plan_id = serializers.PrimaryKeyRelatedField(
+        queryset=MembershipPlan.objects.filter(is_active=True),
+        source="plan",
+        write_only=True,
+    )
+    is_active = serializers.BooleanField(read_only=True)
+
+    class Meta:
+        model = UserMembership
+        fields = [
+            "id",
+            "user",
+            "plan",
+            "plan_id",
+            "start_date",
+            "end_date",
+            "status",
+            "is_active",
+            "created_at",
+        ]
+        read_only_fields = ["user", "start_date", "end_date", "status", "is_active", "created_at"]
 
 
 class PaymentSerializer(serializers.ModelSerializer):
